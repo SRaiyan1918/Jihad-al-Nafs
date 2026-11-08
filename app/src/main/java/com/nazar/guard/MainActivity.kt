@@ -16,6 +16,7 @@ import android.widget.Toast
 class MainActivity : Activity() {
 
     private lateinit var status: TextView
+    private lateinit var last: TextView
 
     override fun onCreate(b: Bundle?) {
         super.onCreate(b)
@@ -44,7 +45,9 @@ class MainActivity : Activity() {
             setOnClickListener { f() }
         }
 
+        last = TextView(this).apply { textSize = 13f; setPadding(0, 0, 0, dp(12)) }
         col.addView(status)
+        col.addView(last)
         col.addView(btn("1) Accessibility ON karo") {
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             Toast.makeText(this, "Nazar Guard chuno aur ON karo", Toast.LENGTH_LONG).show()
@@ -69,6 +72,7 @@ class MainActivity : Activity() {
         super.onResume()
         val s = Settings.Secure.getString(contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES) ?: ""
         val on = s.contains("$packageName/")
+        last.text = "Last block: " + (getSharedPreferences("cfg", MODE_PRIVATE).getString("lastReason", "none") ?: "none")
         status.text = if (on) "Guard: ON" else "Guard: OFF (Accessibility chalu karo)"
     }
 }
